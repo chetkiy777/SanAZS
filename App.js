@@ -1,11 +1,19 @@
 import { StyleSheet, Text, View, Image, ImageBackground, TouchableOpacity, } from 'react-native';
+import MapScreen from './components/MapScreen';
 import Bell from './images/svg/Bell';
-import Menu from './images/svg/Menu';
+import MenuSVG from './images/svg/MenuSVG';
 import Logo from './images/svg/Logo';
-import CustomButton from './components/CustomButton';
-import Percent from './images/svg/Percent';
+import {DropDownMenu} from './components/DropDownMenu';
+import { useState } from 'react';
 
 export default function App() {
+
+  let [visible, setVisible] = useState(false)
+
+  const toggleMenu = () => {
+      setVisible(!visible);
+  }
+
   return (
     <View style={styles.container}>
       <ImageBackground source={require('./images/bg1.png')} style={styles.image}>
@@ -18,8 +26,8 @@ export default function App() {
 
           <Logo />
 
-          <TouchableOpacity>
-            <Menu />
+          <TouchableOpacity onPress={() => toggleMenu()}>
+            <MenuSVG />
           </TouchableOpacity>
         </View>
 
@@ -46,8 +54,17 @@ export default function App() {
 
         <Text style={styles.title}>Карта АЗК САН</Text>
 
+        <View style={styles.mapContainter}>
+          <MapScreen />
+        </View>
 
-
+        <View style={[styles.menuContainer,
+          {
+            transform: [{translateX: visible ? 0 : 260}],
+          }
+        ]}>
+          <DropDownMenu toggleMenu={toggleMenu}/>
+        </View>
       </ImageBackground>
     </View>
   );
@@ -57,7 +74,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-
+    position: 'relative',
   },
   image: {
     flex: 1,
@@ -102,7 +119,10 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     justifyContent: 'center',
     border: '1px solid #FCFFFE',
-    boxShadow: '0px 4px 10px rgba(38, 38, 38, 0.07), inset 0px 2px 4px rgba(0, 0, 0, 0.05)',
+    shadowColor: 'rgba(38, 38, 38, 0.07)',
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
   },
   btnTitle: {
     fontSize: 14,
@@ -110,6 +130,15 @@ const styles = StyleSheet.create({
     color: '#303030',
     marginLeft: 19,
     marginLeft: 50
-}
-
+},
+  mapContainter:  {
+    flex: 1,
+    marginTop: 18
+  },
+  menuContainer: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    height: '100%',
+  }
 });
